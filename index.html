@@ -26,37 +26,22 @@
   </head>
 
   <body>
-    <!-- Custom Animated Fire Cursor -->
+    <!-- Custom Pointer Cursor -->
     <div class="custom-cursor">
       <svg
-        class="cursor-fire"
+        class="cursor-pointer"
         xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="28"
-        viewBox="0 0 28 28"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       >
-        <defs>
-          <filter id="fireGlow">
-            <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <path
-          d="M14 2C9.58 2 6 5.58 6 10c0 2.78 1.39 5.22 3.5 6.7V19c0 3.22 2.61 5.83 5.83 5.83S20.33 22.22 20.33 19v-2.3c2.11-1.48 3.5-3.92 3.5-6.7 0-4.42-3.58-8-8-8zm0 2.33c3.22 0 5.83 2.61 5.83 5.83 0 1.9-.93 3.69-2.33 4.77V19c0 1.93-1.56 3.5-3.5 3.5s-3.5-1.57-3.5-3.5v-3.07c-1.4-1.08-2.33-2.87-2.33-4.77 0-3.22 2.61-5.83 5.83-5.83z"
-          fill="#FF6B35"
-          filter="url(#fireGlow)"
-        />
-        <path
-          d="M14 4.67c-2.58 0-4.67 2.09-4.67 4.67 0 1.28.53 2.45 1.37 3.3L14 17.5l3.3-4.86c.84-.85 1.37-2.02 1.37-3.3 0-2.58-2.09-4.67-4.67-4.67z"
-          fill="#FF8C42"
-        />
-        <path
-          d="M14 7c-1.28 0-2.33 1.05-2.33 2.33 0 .64.26 1.22.69 1.64L14 14.33l1.64-2.36c.43-.42.69-1 .69-1.64 0-1.28-1.05-2.33-2.33-2.33z"
-          fill="#FFB84D"
-        />
+        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+        <path d="m13 13 6 6" />
       </svg>
     </div>
 
@@ -776,7 +761,7 @@
                     </svg>
                   </a>
                   <a
-                    href="https://github.com/jaegertracing/jaeger/issues?q=is%3Apr%20state%3Aclosed%20author%3AParship12"
+                    href="https://github.com/jaegertracing/jaeger/pulls?q=is%3Apr+author%3AParship12+is%3Aclosed"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="contribution-link"
