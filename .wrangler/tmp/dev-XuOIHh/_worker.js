@@ -2,9 +2,38 @@ var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
 // _worker.js
+function getContentType(pathname) {
+  const ext = pathname.split(".").pop()?.toLowerCase();
+  const types = {
+    html: "text/html; charset=utf-8",
+    css: "text/css; charset=utf-8",
+    js: "application/javascript; charset=utf-8",
+    json: "application/json",
+    png: "image/png",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    gif: "image/gif",
+    svg: "image/svg+xml",
+    ico: "image/x-icon",
+    webp: "image/webp"
+  };
+  return types[ext] || "text/plain";
+}
+__name(getContentType, "getContentType");
 var worker_default = {
   async fetch(request, env) {
     try {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      }
       const url = new URL(request.url);
       let pathname = url.pathname;
       if (pathname === "/" || pathname === "") {
@@ -29,7 +58,18 @@ var worker_default = {
         });
         asset = await env.ASSETS.fetch(indexRequest);
       }
-      return asset;
+      const response = new Response(asset.body, asset);
+      response.headers.set("Access-Control-Allow-Origin", "*");
+      response.headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+      response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+      if (!response.headers.has("Content-Type")) {
+        const contentType = getContentType(pathname);
+        if (contentType) {
+          response.headers.set("Content-Type", contentType);
+        }
+      }
+      response.headers.set("X-Robots-Tag", "index, follow");
+      return response;
     } catch (error) {
       return new Response(
         `Worker Error: ${error.message}
