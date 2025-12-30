@@ -2,5 +2,7 @@ name = "parship-io"
 compatibility_date = "2025-12-30"
 main = "_worker.js"
 
-[site]
-bucket = "."
+[assets]
+directory = "."
+binding = "ASSETS"
+exclude = ["node_modules", ".git", ".gitignore", "package.json", "package-lock.json", "README.md", ".prettierrc", ".prettierignore", "wrangler.toml", "_worker.js"]
