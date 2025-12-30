@@ -15,7 +15,7 @@ function getContentType(pathname) {
     gif: "image/gif",
     svg: "image/svg+xml",
     ico: "image/x-icon",
-    webp: "image/webp"
+    webp: "image/webp",
   };
   return types[ext] || "text/plain";
 }
@@ -30,19 +30,22 @@ var worker_default = {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Max-Age": "86400"
-          }
+            "Access-Control-Max-Age": "86400",
+          },
         });
       }
       const url = new URL(request.url);
       let pathname = url.pathname;
       if (pathname === "/robots.txt") {
-        return new Response("User-agent: *\nAllow: /\n\nUser-agent: LinkedInBot\nAllow: /\n\nUser-agent: facebookexternalhit\nAllow: /\n\nUser-agent: Twitterbot\nAllow: /", {
-          headers: {
-            "Content-Type": "text/plain; charset=utf-8",
-            "Access-Control-Allow-Origin": "*"
+        return new Response(
+          "User-agent: *\nAllow: /\n\nUser-agent: LinkedInBot\nAllow: /\n\nUser-agent: facebookexternalhit\nAllow: /\n\nUser-agent: Twitterbot\nAllow: /",
+          {
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8",
+              "Access-Control-Allow-Origin": "*",
+            },
           }
-        });
+        );
       }
       if (pathname === "/" || pathname === "") {
         pathname = "/index.html";
@@ -51,18 +54,18 @@ var worker_default = {
       if (!env || !env.ASSETS) {
         return new Response("Assets binding not configured. Check wrangler.toml configuration.", {
           status: 500,
-          headers: { "Content-Type": "text/plain" }
+          headers: { "Content-Type": "text/plain" },
         });
       }
       const assetRequest = new Request(new URL(assetPath, request.url), {
         method: request.method,
-        headers: request.headers
+        headers: request.headers,
       });
       let asset = await env.ASSETS.fetch(assetRequest);
       if (asset.status === 404 && pathname !== "/index.html") {
         const indexRequest = new Request(new URL("index.html", request.url), {
           method: request.method,
-          headers: request.headers
+          headers: request.headers,
         });
         asset = await env.ASSETS.fetch(indexRequest);
       }
@@ -86,7 +89,7 @@ var worker_default = {
       return new Response(body, {
         status: asset.status,
         statusText: asset.statusText,
-        headers
+        headers,
       });
     } catch (error) {
       return new Response(
@@ -94,11 +97,11 @@ var worker_default = {
 Stack: ${error.stack}`,
         {
           status: 500,
-          headers: { "Content-Type": "text/plain" }
+          headers: { "Content-Type": "text/plain" },
         }
       );
     }
-  }
+  },
 };
 
 // ../../../AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
@@ -109,8 +112,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
     try {
       if (request.body !== null && !request.bodyUsed) {
         const reader = request.body.getReader();
-        while (!(await reader.read()).done) {
-        }
+        while (!(await reader.read()).done) {}
       }
     } catch (e) {
       console.error("Failed to drain the unused request body.", e);
@@ -125,7 +127,7 @@ function reduceError(e) {
     name: e?.name,
     message: e?.message ?? String(e),
     stack: e?.stack,
-    cause: e?.cause === void 0 ? void 0 : reduceError(e.cause)
+    cause: e?.cause === void 0 ? void 0 : reduceError(e.cause),
   };
 }
 __name(reduceError, "reduceError");
@@ -136,7 +138,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
     const error = reduceError(e);
     return Response.json(error, {
       status: 500,
-      headers: { "MF-Experimental-Error-Stack": "true" }
+      headers: { "MF-Experimental-Error-Stack": "true" },
     });
   }
 }, "jsonError");
@@ -145,7 +147,7 @@ var middleware_miniflare3_json_error_default = jsonError;
 // .wrangler/tmp/bundle-ZhyRcm/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
-  middleware_miniflare3_json_error_default
+  middleware_miniflare3_json_error_default,
 ];
 var middleware_insertion_facade_default = worker_default;
 
@@ -161,7 +163,7 @@ function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
     dispatch,
     next(newRequest, newEnv) {
       return __facade_invokeChain__(newRequest, newEnv, ctx, dispatch, tail);
-    }
+    },
   };
   return head(request, env, ctx, middlewareCtx);
 }
@@ -169,7 +171,7 @@ __name(__facade_invokeChain__, "__facade_invokeChain__");
 function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   return __facade_invokeChain__(request, env, ctx, dispatch, [
     ...__facade_middleware__,
-    finalMiddleware
+    finalMiddleware,
   ]);
 }
 __name(__facade_invoke__, "__facade_invoke__");
@@ -193,13 +195,16 @@ var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   }
 };
 function wrapExportedHandler(worker) {
-  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
+  if (
+    __INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 ||
+    __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0
+  ) {
     return worker;
   }
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
-  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+  const fetchDispatcher = /* @__PURE__ */ __name(function (request, env, ctx) {
     if (worker.fetch === void 0) {
       throw new Error("Handler does not export a fetch() function.");
     }
@@ -208,24 +213,26 @@ function wrapExportedHandler(worker) {
   return {
     ...worker,
     fetch(request, env, ctx) {
-      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+      const dispatcher = /* @__PURE__ */ __name(function (type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__(
             Date.now(),
             init.cron ?? "",
-            () => {
-            }
+            () => {}
           );
           return worker.scheduled(controller, env, ctx);
         }
       }, "dispatcher");
       return __facade_invoke__(request, env, ctx, dispatcher, fetchDispatcher);
-    }
+    },
   };
 }
 __name(wrapExportedHandler, "wrapExportedHandler");
 function wrapWorkerEntrypoint(klass) {
-  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
+  if (
+    __INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 ||
+    __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0
+  ) {
     return klass;
   }
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
@@ -245,8 +252,7 @@ function wrapWorkerEntrypoint(klass) {
         const controller = new __Facade_ScheduledController__(
           Date.now(),
           init.cron ?? "",
-          () => {
-          }
+          () => {}
         );
         return super.scheduled(controller);
       }
@@ -270,8 +276,5 @@ if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapWorkerEntrypoint(middleware_insertion_facade_default);
 }
 var middleware_loader_entry_default = WRAPPED_ENTRY;
-export {
-  __INTERNAL_WRANGLER_MIDDLEWARE__,
-  middleware_loader_entry_default as default
-};
+export { __INTERNAL_WRANGLER_MIDDLEWARE__, middleware_loader_entry_default as default };
 //# sourceMappingURL=_worker.js.map

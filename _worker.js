@@ -38,12 +38,15 @@ export default {
 
       // Handle robots.txt
       if (pathname === "/robots.txt") {
-        return new Response("User-agent: *\nAllow: /\n\nUser-agent: LinkedInBot\nAllow: /\n\nUser-agent: facebookexternalhit\nAllow: /\n\nUser-agent: Twitterbot\nAllow: /", {
-          headers: {
-            "Content-Type": "text/plain; charset=utf-8",
-            "Access-Control-Allow-Origin": "*",
-          },
-        });
+        return new Response(
+          "User-agent: *\nAllow: /\n\nUser-agent: LinkedInBot\nAllow: /\n\nUser-agent: facebookexternalhit\nAllow: /\n\nUser-agent: Twitterbot\nAllow: /",
+          {
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }
+        );
       }
 
       // Default to index.html for root
@@ -82,10 +85,10 @@ export default {
 
       // Get the response body
       const body = await asset.arrayBuffer();
-      
+
       // Create new response with proper headers
       const headers = new Headers(asset.headers);
-      
+
       // Ensure proper content type
       if (!headers.has("Content-Type")) {
         const contentType = getContentType(pathname);
@@ -93,7 +96,7 @@ export default {
           headers.set("Content-Type", contentType);
         }
       }
-      
+
       // For HTML files, ensure charset is set
       if (pathname.endsWith(".html") || pathname === "/" || pathname === "") {
         headers.set("Content-Type", "text/html; charset=utf-8");
@@ -106,7 +109,7 @@ export default {
 
       // Allow LinkedIn and other social media crawlers
       headers.set("X-Robots-Tag", "index, follow");
-      
+
       // Remove any blocking headers
       headers.delete("X-Frame-Options");
       headers.delete("Content-Security-Policy");
@@ -118,14 +121,10 @@ export default {
       });
     } catch (error) {
       // Return error response with details
-      return new Response(
-        `Worker Error: ${error.message}\nStack: ${error.stack}`,
-        {
-          status: 500,
-          headers: { "Content-Type": "text/plain" },
-        }
-      );
+      return new Response(`Worker Error: ${error.message}\nStack: ${error.stack}`, {
+        status: 500,
+        headers: { "Content-Type": "text/plain" },
+      });
     }
   },
 };
-
