@@ -1,7 +1,7 @@
 # Parship.io
 
 <div align="center">
-  <img src="assets/profile-pic 2.png" alt="Parship Chowdhury" width="200" style="border-radius: 50%;" />
+  <img src="assets/cropped_circle_image.png" alt="Parship Chowdhury" width="100" style="border-radius: 20%;" />
 </div>
 
 <div align="center">
