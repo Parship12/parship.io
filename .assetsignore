@@ -1,0 +1,11 @@
+_worker.js
+wrangler.toml
+package.json
+package-lock.json
+README.md
+.prettierrc
+.prettierignore
+.gitignore
+node_modules
+.git
+
