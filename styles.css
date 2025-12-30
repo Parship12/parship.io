@@ -145,7 +145,6 @@ select {
   cursor: none !important;
 }
 
-/* Utility Classes */
 .hidden {
   display: none !important;
 }
@@ -154,7 +153,7 @@ select {
   font-weight: 600;
 }
 
-/* Navigation - Small Floating Component */
+/* Navigation */
 .nav {
   position: fixed;
   top: 1.5rem;
@@ -260,7 +259,6 @@ select {
   }
 }
 
-/* Container */
 .container {
   max-width: 56rem;
   margin: 0 auto;
@@ -268,7 +266,6 @@ select {
   width: 100%;
 }
 
-/* Hero Section */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -453,7 +450,7 @@ select {
   padding: 2rem 0;
 }
 
-/* Commented out project styles - keeping minimal for now
+/*
 .projects {
   min-height: 100vh;
   padding: 5rem 0;
@@ -489,7 +486,7 @@ select {
   font-weight: 700;
 }
 
-/* Commented out - projects grid styles
+/*
 .projects-grid {
   display: grid;
   gap: 1.5rem;
@@ -576,7 +573,7 @@ select {
   }
 }
 
-/* Commented out - project card styles
+/* Commented out - project card styles - will apply when projects added
 .project-card {
   background-color: hsl(var(--card));
   border: 1px solid hsl(var(--border));
@@ -663,7 +660,7 @@ select {
 }
 */
 
-/* Commented out - project tech and footer styles
+/*
 .project-tech-label {
   font-size: 0.875rem;
   color: hsl(var(--gray-dark));
@@ -725,7 +722,7 @@ select {
   color: hsl(var(--gray-light));
 }
 
-/* Commented out - project details link styles
+/* project details link styles
 .project-details-link {
   display: flex;
   align-items: center;

@@ -1,4 +1,3 @@
-// Theme Management - Apply immediately to prevent flash
 (function () {
   // Get theme from localStorage or default to 'dark'
   function getTheme() {
@@ -6,7 +5,6 @@
     if (savedTheme) {
       return savedTheme;
     }
-    // Check system preference
     if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
       return "dark";
     }
@@ -30,9 +28,6 @@
     const moonIcon = document.getElementById("moon-icon");
 
     if (!sunIcon || !moonIcon) return;
-
-    // In dark mode: show sun icon (to switch to light)
-    // In light mode: show moon icon (to switch to dark)
     if (theme === "dark") {
       sunIcon.classList.remove("hidden");
       moonIcon.classList.add("hidden");
@@ -50,23 +45,17 @@
     localStorage.setItem("theme", newTheme);
     applyTheme(newTheme);
   }
-
-  // Apply theme immediately (before DOMContentLoaded) to prevent flash
   const theme = getTheme();
   applyTheme(theme);
 
-  // Initialize theme toggle button after DOM loads
   document.addEventListener("DOMContentLoaded", function () {
-    // Update icons in case they weren't ready before
     updateThemeIcon(getTheme());
 
-    // Add event listener to theme toggle button
     const themeToggle = document.getElementById("theme-toggle");
     if (themeToggle) {
       themeToggle.addEventListener("click", toggleTheme);
     }
 
-    // Listen for system theme changes
     if (window.matchMedia) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
       mediaQuery.addEventListener("change", function (e) {
@@ -81,7 +70,6 @@
 
 // GitHub Contributions
 (function () {
-  // ⚙️ CONFIGURATION: Replace 'YOUR_GITHUB_USERNAME' with your actual GitHub username
   const GITHUB_USERNAME = "Parship12";
 
   async function fetchGitHubContributions() {
@@ -89,23 +77,15 @@
     const chartElement = document.getElementById("github-chart");
 
     if (!totalElement || !chartElement) return;
-
-    // Show loading state
     totalElement.textContent = "Loading...";
 
     try {
-      // Update chart image source (multiple API options for reliability)
-      // Option 1: ghchart.rshah.org (most reliable)
       chartElement.src = `https://ghchart.rshah.org/${GITHUB_USERNAME}?theme=default`;
       chartElement.alt = `${GITHUB_USERNAME}'s GitHub contribution graph`;
-
-      // Add error handler for image
       chartElement.onerror = function () {
-        // Fallback to alternative API
         chartElement.src = `https://github-contributions.vercel.app/api/v1/${GITHUB_USERNAME}?no-frame=true`;
       };
 
-      // Fetch contribution data from multiple APIs for reliability
       let totalContributions = 0;
       const currentYear = new Date().getFullYear();
 
@@ -128,7 +108,6 @@
         console.log("Primary API failed, trying alternative...");
       }
 
-      // If primary API failed, try alternative
       if (totalContributions === 0) {
         try {
           const response = await fetch(
@@ -136,7 +115,6 @@
           );
           if (response.ok) {
             const data = await response.json();
-            // Calculate total from contributions array
             if (data.contributions && Array.isArray(data.contributions)) {
               totalContributions = data.contributions.reduce(
                 (sum, day) => sum + (day.count || 0),
@@ -194,8 +172,6 @@
     const opacity = scrollY < threshold ? 1 - scrollY / threshold : 0;
 
     nav.style.opacity = opacity;
-
-    // Add/remove scrolled class for hover effect
     if (scrollY > threshold) {
       nav.classList.add("scrolled");
     } else {
@@ -214,10 +190,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Initialize opacity on load
     updateNavOpacity();
-
-    // Listen to scroll events
     window.addEventListener("scroll", onScroll, { passive: true });
   });
 })();
@@ -251,9 +224,7 @@
   });
 })();
 
-// Custom Animated Fire Cursor with Moving Glow
 (function () {
-  // Initialize cursor position at top-left corner with padding
   const padding = 50;
   let mouseX = padding;
   let mouseY = padding;
@@ -270,7 +241,6 @@
     mouseY = e.clientY;
   });
 
-  // Initialize cursor on DOM ready
   document.addEventListener("DOMContentLoaded", function () {
     const customCursor = document.querySelector(".custom-cursor");
     if (!customCursor) return;
@@ -282,11 +252,8 @@
     customCursor.style.visibility = "visible";
     customCursor.style.opacity = "1";
 
-    // Smooth animation loop
     function animate() {
-      // Only follow mouse after it has moved
       if (hasMoved) {
-        // Smooth interpolation for smooth following
         currentX += (mouseX - currentX) * 0.15;
         currentY += (mouseY - currentY) * 0.15;
       } else {
@@ -295,13 +262,11 @@
         currentY = padding;
       }
 
-      // Update cursor position
       customCursor.style.left = currentX + "px";
       customCursor.style.top = currentY + "px";
 
       requestAnimationFrame(animate);
     }
-
     animate();
   });
 })();
