@@ -36,6 +36,16 @@ export default {
       const url = new URL(request.url);
       let pathname = url.pathname;
 
+      // Handle robots.txt
+      if (pathname === "/robots.txt") {
+        return new Response("User-agent: *\nAllow: /\n\nUser-agent: LinkedInBot\nAllow: /\n\nUser-agent: facebookexternalhit\nAllow: /\n\nUser-agent: Twitterbot\nAllow: /", {
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+          },
+        });
+      }
+
       // Default to index.html for root
       if (pathname === "/" || pathname === "") {
         pathname = "/index.html";
@@ -70,26 +80,42 @@ export default {
         asset = await env.ASSETS.fetch(indexRequest);
       }
 
-      // Clone the response to modify headers
-      const response = new Response(asset.body, asset);
-
-      // Add CORS headers for social media crawlers
-      response.headers.set("Access-Control-Allow-Origin", "*");
-      response.headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
-      response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-
-      // Set proper content type if not already set
-      if (!response.headers.has("Content-Type")) {
+      // Get the response body
+      const body = await asset.arrayBuffer();
+      
+      // Create new response with proper headers
+      const headers = new Headers(asset.headers);
+      
+      // Ensure proper content type
+      if (!headers.has("Content-Type")) {
         const contentType = getContentType(pathname);
         if (contentType) {
-          response.headers.set("Content-Type", contentType);
+          headers.set("Content-Type", contentType);
         }
       }
+      
+      // For HTML files, ensure charset is set
+      if (pathname.endsWith(".html") || pathname === "/" || pathname === "") {
+        headers.set("Content-Type", "text/html; charset=utf-8");
+      }
+
+      // Add CORS headers for social media crawlers
+      headers.set("Access-Control-Allow-Origin", "*");
+      headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+      headers.set("Access-Control-Allow-Headers", "Content-Type");
 
       // Allow LinkedIn and other social media crawlers
-      response.headers.set("X-Robots-Tag", "index, follow");
+      headers.set("X-Robots-Tag", "index, follow");
+      
+      // Remove any blocking headers
+      headers.delete("X-Frame-Options");
+      headers.delete("Content-Security-Policy");
 
-      return response;
+      return new Response(body, {
+        status: asset.status,
+        statusText: asset.statusText,
+        headers: headers,
+      });
     } catch (error) {
       // Return error response with details
       return new Response(
@@ -102,3 +128,4 @@ export default {
     }
   },
 };
+

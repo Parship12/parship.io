@@ -36,6 +36,14 @@ var worker_default = {
       }
       const url = new URL(request.url);
       let pathname = url.pathname;
+      if (pathname === "/robots.txt") {
+        return new Response("User-agent: *\nAllow: /\n\nUser-agent: LinkedInBot\nAllow: /\n\nUser-agent: facebookexternalhit\nAllow: /\n\nUser-agent: Twitterbot\nAllow: /", {
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
       if (pathname === "/" || pathname === "") {
         pathname = "/index.html";
       }
@@ -58,18 +66,28 @@ var worker_default = {
         });
         asset = await env.ASSETS.fetch(indexRequest);
       }
-      const response = new Response(asset.body, asset);
-      response.headers.set("Access-Control-Allow-Origin", "*");
-      response.headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
-      response.headers.set("Access-Control-Allow-Headers", "Content-Type");
-      if (!response.headers.has("Content-Type")) {
+      const body = await asset.arrayBuffer();
+      const headers = new Headers(asset.headers);
+      if (!headers.has("Content-Type")) {
         const contentType = getContentType(pathname);
         if (contentType) {
-          response.headers.set("Content-Type", contentType);
+          headers.set("Content-Type", contentType);
         }
       }
-      response.headers.set("X-Robots-Tag", "index, follow");
-      return response;
+      if (pathname.endsWith(".html") || pathname === "/" || pathname === "") {
+        headers.set("Content-Type", "text/html; charset=utf-8");
+      }
+      headers.set("Access-Control-Allow-Origin", "*");
+      headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+      headers.set("Access-Control-Allow-Headers", "Content-Type");
+      headers.set("X-Robots-Tag", "index, follow");
+      headers.delete("X-Frame-Options");
+      headers.delete("Content-Security-Policy");
+      return new Response(body, {
+        status: asset.status,
+        statusText: asset.statusText,
+        headers
+      });
     } catch (error) {
       return new Response(
         `Worker Error: ${error.message}
