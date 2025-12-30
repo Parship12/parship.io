@@ -1,0 +1,12 @@
+{
+  "name": "parship-io",
+  "version": "1.0.0",
+  "description": "Personal portfolio website",
+  "scripts": {
+    "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{html,css,js,json,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
