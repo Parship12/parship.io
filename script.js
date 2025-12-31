@@ -157,43 +157,7 @@
   });
 })();
 
-// Navigation scroll transparency
-(function () {
-  let lastScrollY = 0;
-  let ticking = false;
-
-  function updateNavOpacity() {
-    const nav = document.querySelector(".nav");
-    if (!nav) return;
-
-    const scrollY = window.scrollY;
-    const threshold = 100; // Start fading after 100px scroll
-
-    const opacity = scrollY < threshold ? 1 - scrollY / threshold : 0;
-
-    nav.style.opacity = opacity;
-    if (scrollY > threshold) {
-      nav.classList.add("scrolled");
-    } else {
-      nav.classList.remove("scrolled");
-    }
-
-    lastScrollY = scrollY;
-    ticking = false;
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      window.requestAnimationFrame(updateNavOpacity);
-      ticking = true;
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    updateNavOpacity();
-    window.addEventListener("scroll", onScroll, { passive: true });
-  });
-})();
+// Navigation is now always visible at the bottom - no scroll transparency needed
 
 // Smooth scrolling for anchor links
 (function () {
